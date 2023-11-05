@@ -1,6 +1,6 @@
-package day2;
+package getPathSum;
 
-import day1.Node;
+import tree.Node;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

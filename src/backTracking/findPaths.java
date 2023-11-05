@@ -1,12 +1,11 @@
-package day4;
+package backTracking;
 
-import day1.Node;
+import tree.Node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Stack;
-import java.util.stream.Stream;
 
 public class findPaths {
 

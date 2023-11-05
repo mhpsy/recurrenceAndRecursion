@@ -1,4 +1,4 @@
-package day3;
+package getPathSum2;
 
 public class test {
 

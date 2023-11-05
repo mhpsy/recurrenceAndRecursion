@@ -1,4 +1,4 @@
-package day4;
+package backTracking;
 
 public class backtracking2 {
 
