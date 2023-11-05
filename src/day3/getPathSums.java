@@ -18,6 +18,26 @@ public class getPathSums {
         getPathSumFn(root.right, curSum, resList);
     }
 
+    public static List<Integer> collectSums(Node root) {
+        var res = new ArrayList<Integer>();
+        if (root == null) return res;//如果为空 也要返回一个空的list
+        res.addAll(collectSums(root.left));
+        res.addAll(collectSums(root.right));
+        res.replaceAll(x -> x + root.data);//这里是把每个节点的值都 加上当前节点的值
+        if (root.right == null && root.left == null) res.add(root.data);
+        return res;
+    }
+
+    public static List<Integer> collectSums2(Node root) {
+        var res = new ArrayList<Integer>();
+        if (root == null) return res;
+        // collectSums(root.left) 就是
+        collectSums(root.left).forEach(x -> res.add(x + root.data));
+        collectSums(root.right).forEach(x -> res.add(x + root.data));
+        if (root.left == null && root.right == null) res.add(root.data);
+        return res;
+    }
+
     public static void main(String[] args) {
         int[] arr = {1, 2, 3, 4, 5, 6, 7};
         Node root = Node.buildTree(arr, 0, arr.length - 1);
@@ -26,5 +46,6 @@ public class getPathSums {
         assert root != null;
         getPathSumFn(root, 0, list);
         System.out.println(list);
+        System.out.println(collectSums2(root));
     }
 }
