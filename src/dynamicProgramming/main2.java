@@ -39,7 +39,7 @@ public class main2 {
 
     public static void main(String[] args) {
         int[] coins = {2, 3, 5};
-        System.out.println(change(coins, 21));
+        System.out.println(change(coins, 2100));
     }
 
 
