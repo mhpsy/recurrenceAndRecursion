@@ -180,7 +180,6 @@ public class Invitation {
         if (invs[0].hour < limit)
             //因为第一个不需要进行碰撞 所以直接赋值就行了
             optimal[0][invs[0].hour] = invs[0].reward;
-
         for (int invIndex = 1; invIndex < invs.length; invIndex++) {
             //要把上一个的最优解复制过来一套
             System.arraycopy(optimal[invIndex - 1], 0, optimal[invIndex], 0, limit + 1);
