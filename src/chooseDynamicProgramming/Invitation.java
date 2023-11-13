@@ -1,6 +1,8 @@
 package chooseDynamicProgramming;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Invitation {
     int hour;
@@ -139,11 +141,65 @@ public class Invitation {
                                 optimal[invIndex - 1][hour - invitations[invIndex].hour] + invitations[invIndex].reward
                         );
                     } else {
+                        //如果当前考虑的时间 小于当前邀请所需要的时间 那么就不可能选择这个邀请
+                        //所以直接用上一个的最优解就行了
                         optimal[invIndex][hour] = optimal[invIndex - 1][hour];
                     }
                 }
             }
         }
         return optimal[invitations.length - 1][limit];
+    }
+
+    public static Map<Integer, Integer> choose5(Invitation[] invs, int i, int limit) {
+        if (i >= invs.length) return new HashMap<>();//如果已经没有邀请了 那么就返回一个空的map
+        Map<Integer, Integer> subOptimal = choose5(invs, i + 1, limit);//先获取下一个的最优解
+        Map<Integer, Integer> optimal = new HashMap<>(subOptimal);//浅拷贝一份
+        if (optimal.isEmpty()) {
+            //如果是第一次 并且当前的邀请的时间小于等于limit 那么就放进去 总是就是初始化第一个
+            if (invs[i].hour <= limit) optimal.put(invs[i].hour, invs[i].reward);
+        } else {
+            for (Integer h : subOptimal.keySet()) {
+                int newHour = h + invs[i].hour;
+                int newReward = subOptimal.get(h) + invs[i].reward;
+                //如果新的时间小于等于limit 并且新的reward大于之前的reward 那么就放进去
+                if (newHour <= limit && (!optimal.containsKey(newHour) || optimal.get(newHour) < newReward))
+                    optimal.put(newHour, newReward);
+            }
+
+            //如果没有这个hour 或者这个hour的reward更大 那么就放进去
+            if (!optimal.containsKey(invs[i].hour)
+                    || invs[i].reward > optimal.get((invs[i].hour)))
+                optimal.put(invs[i].hour, invs[i].reward);
+        }
+        return optimal;
+    }
+
+    public static int choose6(Invitation[] invs, int limit) {
+        int[][] optimal = new int[invs.length][limit + 1];
+        if (invs[0].hour < limit)
+            //因为第一个不需要进行碰撞 所以直接赋值就行了
+            optimal[0][invs[0].hour] = invs[0].reward;
+
+        for (int invIndex = 1; invIndex < invs.length; invIndex++) {
+            //要把上一个的最优解复制过来一套
+            System.arraycopy(optimal[invIndex - 1], 0, optimal[invIndex], 0, limit + 1);
+            for (int hour = 1; hour <= limit; hour++) {
+                int newHour = hour + invs[invIndex].hour;
+                int newReward = optimal[invIndex - 1][hour] + invs[invIndex].reward;
+                //数组的好处就是不用判断是否存在了
+                if (newHour <= limit && optimal[invIndex][newHour] < newReward) {
+                    optimal[invIndex][newHour] = newReward;
+                }
+            }
+            //判断当前的邀请是否可以直接放进去
+            if (invs[invIndex].hour <= limit && invs[invIndex].reward > optimal[invIndex][invs[invIndex].hour]) {
+                optimal[invIndex][invs[invIndex].hour] = invs[invIndex].reward;
+            }
+        }
+
+        System.out.println(Arrays.deepToString(optimal));
+
+        return Arrays.stream(optimal[invs.length - 1]).max().orElse(-1);
     }
 }
